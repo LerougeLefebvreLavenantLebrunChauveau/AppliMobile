@@ -1,12 +1,10 @@
 import { createStore } from 'vuex'
 
+import lists from './lists';
+
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+  debug : true,
   modules: {
-  }
+      lists
+    },
 })
