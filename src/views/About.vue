@@ -1,13 +1,24 @@
 <template>
-  <div class="login">
 
-    <h1>Login page</h1>
+  <div class="login">
+    <h3>Sign in</h3>
     <form action="POST">
       <label>username <input type="text" name="username" value=""/></label>
       <label>password <input type="text" name="password" value=""/></label>
       <button type="submit"> Connexion </button>
     </form>
+</div>
+
+<div class="Register">
+  <h3> No account ? Sign up here </h3>
+    <form action="POST">
+      <label>username <input type="text" name="username" value=""/></label>
+      <label>password <input type="text" name="password" value=""/></label>
+      <label>confirm password <input type="text" name="password" value=""/></label>
+      <button type="submit"> Register </button>
+    </form>
   </div>
+
 </template>
 
 <script>
