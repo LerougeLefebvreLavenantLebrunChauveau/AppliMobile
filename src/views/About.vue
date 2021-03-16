@@ -13,6 +13,7 @@
   <h3> No account ? Sign up here </h3>
     <form action="POST">
       <label>username <input type="text" name="username" value=""/></label>
+      <label>email <input type="text" name="email" value=""/></label>
       <label>password <input type="text" name="password" value=""/></label>
       <label>confirm password <input type="text" name="password" value=""/></label>
       <button type="submit"> Register </button>
