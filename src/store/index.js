@@ -1,10 +1,10 @@
 import { createStore } from 'vuex'
 
-import lists from './lists';
+import account from './account';
 
 export default createStore({
   debug : true,
   modules: {
-      lists
+      account
     },
 })
