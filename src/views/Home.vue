@@ -12,7 +12,8 @@
       <button  @click='this.modifyTodo({"token": getToken, "id": "915", "listId": 637, "name": "testabadoukedapo2", "completed": 0})'>patchTodo</button>
       <button  @click='this.loadTodoLists(getToken)'>todolists</button>
       <button  @click='this.login({"email": "suliac@toto.com", "password": "totototo"})'>Login</button>
-      <button  @click='this.signup({"email": "suliac@toto.com", "name": "Suliac", "password": "totototo"})'>register</button>
+      <button  @click='this.logout()'>logout</button>
+      <button  @click='this.register({"email": "suliac@toto.com", "name": "Suliac", "password": "totototo"})'>register</button>
     </div>
 </template>
 
@@ -22,7 +23,7 @@
     export default {
         name: 'Home',
         methods: {
-            ...mapActions("account", ['signup', 'login']),
+            ...mapActions("account", ['register', 'login', 'logout']),
             ...mapActions("todolist", ['loadTodoLists','loadTodoList','createTodoList','deleteTodoList','createTodo','deleteTodo','completeTodo','modifyTodo']),
             testla(){
               console.log("a")

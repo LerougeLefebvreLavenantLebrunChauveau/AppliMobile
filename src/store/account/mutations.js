@@ -9,3 +9,10 @@ export function accountInformation(state, data){
     state.email = data["email"]
     state.id = data["id"]
 }
+
+export function logout(state){
+    console.log("logout");
+    state.name = null
+    state.email = null
+    state.id = null
+}
