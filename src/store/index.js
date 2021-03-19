@@ -1,10 +1,12 @@
 import { createStore } from 'vuex'
 
-import lists from './lists';
+import account from './account';
+import todolist from './todolist';
 
 export default createStore({
   debug : true,
   modules: {
-      lists
+      account,
+      todolist
     },
 })

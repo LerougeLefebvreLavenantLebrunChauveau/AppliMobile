@@ -1,57 +1,66 @@
 <template>
+<div v-show="this.getName == null" class="connect">
 
   <div class="login">
     <h3>Sign in</h3>
-    <form action="POST">
-      <label>username <input type="text" name="username" value=""/></label>
-      <label>password <input type="text" name="password" value=""/></label>
-      <button type="submit"> Connexion </button>
+    <form @submit.prevent="submit">
+      <label>email <input type="email" name="email" v-model="logi.email" required/></label>
+      <label>password <input type="password" name="password" v-model="logi.password" required/></label>
+      <button  @click='this.login({"email": ""+this.logi.email, "password": ""+this.logi.password})'>Login</button>
     </form>
 </div>
 
 <div class="Register">
   <h3> No account ? Sign up here </h3>
     <form action="POST">
-      <label>username <input type="text" name="username" value=""/></label>
-      <label>email <input type="text" name="email" value=""/></label>
-      <label>password <input type="text" name="password" value=""/></label>
-      <label>confirm password <input type="text" name="password" value=""/></label>
-      <button type="submit"> Register </button>
+      <label>username <input type="text" name="username" v-model="regi.username"/></label>
+      <label>email <input type="email" name="email" v-model="regi.email" required/></label>
+      <label>password <input type="password" name="password" v-model="regi.password" required/></label>
+      <button  @click='this.register({"name":""+this.regi.username,"email": ""+this.regi.email ,"password": ""+this.regi.password})'>Register</button>
     </form>
+  </div>
+</div>
+
+  <div v-show="this.getName != null">
+    <p>Hello {{ this.getName }}.</p> 
+    <p> Your email : {{ this.getEmail }}</p>
+  <button @click="this.logout()"> Log out </button>
   </div>
 
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-//import Bien from '@/components/Bien.vue';
-export default {
-  name: 'App',
-  components: {
-    //Bien
-  },
-  computed: {
-    ...mapGetters("immo", ["biens"])
-  },
+
+  import { mapActions, mapGetters } from "vuex";
+
+    export default {
+        name: 'Home',
+        data() {
+          return {
+          logi: {
+            email: "",
+            password: "",
+          },
+          regi: {
+            username:"",
+            email: "",
+            password:"",
+          },
+          isConnected:false
+          };
+        },
+        methods: {
+            ...mapActions("account", ['logout', 'login','register','disconnect']),
+            testla(){
+              console.log("a")
+            }
+        },
+
+        computed: {
+            ...mapGetters("account", ['getName','getToken','getEmail']),
+        },
+
+    }
   
-  methods: {
-    ...mapActions("immo", ['load'])
-  },
-  
-  mounted() {
-            this.load();
-  }
-}
 </script>
 
-<style> 
-  form {
-    display:grid;
-    grid-template-columns:auto;
-  }
-  button {
-    width:100px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-</style>
