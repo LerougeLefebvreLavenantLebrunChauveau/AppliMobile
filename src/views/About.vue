@@ -30,9 +30,7 @@
 </template>
 
 <script>
-
   import { mapActions, mapGetters } from "vuex";
-
     export default {
         name: 'Home',
         data() {
@@ -55,12 +53,9 @@
               console.log("a")
             }
         },
-
         computed: {
             ...mapGetters("account", ['getName','getToken','getEmail']),
         },
-
     }
   
 </script>
-

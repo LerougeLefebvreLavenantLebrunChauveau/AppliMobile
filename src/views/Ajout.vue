@@ -3,9 +3,8 @@
     <h1>Ajouter des tâches à une liste</h1>
     <form action="POST">
       <label for="selectListe"> Choisir une liste </label>
-      <select name="liste" id="liste">
-        <option value=""> -- Choisir une liste -- </option>
-        <option value="" v-for="todo in filtreTodos" v-bind:key="todo.id"> {{todo.name  }} </option>
+      <select v-model="selected">
+        <option v-for="myList in listes" :value="myList.id" v-bind:key="myList.id"> {{myList.name}} </option>
       </select>
       <br>
       <label>Nom de la tâche <input type="text" name="nomTâche" value=""/></label>
@@ -34,32 +33,26 @@ export default{
       },
       data() {
         return {
-          todos: [
+          listes:[
             {
-              id: 1,
-              name: 'tache 1',
-              completed: false
+              id: "1",
+              name: 'Une première liste',
+              filter: 'all',
+              complete: false,
+              checkToutCompleter: false,
+              newTodo : ''
             },
-            {
-              id: 2,
-              name: 'tache 2',
-              completed: true
-            },
-            {
-              id: 3,
-              name: 'tache 3',
-              completed: true
-            },
-            {
-              id: 4,
-              name: 'tache 4',
-              completed:false
+            {              
+              id: "2",
+              name: 'Une seconde liste',
+              filter: 'all',
+              complete: false,
+              checkToutCompleter: false,
+              newTodo : ''
             }
           ],
-          newTodo: '',
-          filter: 'all',
-          complete: true,
-          checkToutCompleter: false
+          selected:'',
+          listeVide : ''
         }
       },
       methods: {

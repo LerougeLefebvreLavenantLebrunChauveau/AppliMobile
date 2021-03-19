@@ -1,26 +1,44 @@
 <template>
 <div>
-  <label>Choisir une liste</label>
+  <button  @click='this.createTodoList({"token": getToken, "name": "newList2"})'>newtodolist</button>
+  <button  @click='this.loadTodoLists(getToken)'>todolists</button>
+  <button  @click='this.deleteTodoList({"token": getToken, "id": "726"})'>deletelist</button>
+  <button  @click='this.loadTodoList({"token": getToken, "id": 637})'>todo</button>
+  <button  @click='this.completeTodo({"token": getToken, "id": "915", "listId": 637, "name": "testabadoukedapo2", "completed": 1})'>completeTodo</button>
+  <button  @click='this.deleteTodo({"token": getToken, "id": "914", "listId": 637})'>deleteTodo</button>
   <br />
-  <select v-model="selected" v-on:change="getListes($event)">
-    <option v-for="myList in listes" :value="myList.id" v-bind:key="myList.id"> {{myList.name}} </option>
+  <label>Choisir une liste</label>
+  <br/>
+  <select @click.prevent='this.loadTodoLists(getToken)'>
+    <option v-for="todolist in getTodolists" :value="todolist.id" v-bind:key="todolist.id" @click='this.loadTodoList({"token": getToken, "id": todolist.id})'> 
+      {{todolist.name}}
+    </option>
   </select>
   <br />
   <input type="checkbox" v-on:change="toutCompleter()" v-model="checkToutCompleter"> 
   <span v-show="checkToutCompleter">Tout</span>
   <span v-show="!checkToutCompleter">Aucun</span>
-  <ul class="todo-list">
-    <li class="todo" v-for="todo in listeVide.todos" v-bind:key="todo.id" :class="{completed: todo.completed}">
+  
+  <ul>
+    <li class="todo" v-for="todo in getTodolist" v-bind:key="todo.id" :class="{completed: todo.completed}">
       <div>
-        <input type="checkbox" v-model="todo.completed" v-on:change="miseAJourTodo(todo)">
-        <label> {{todo.name}} </label> 
-        <button type="destroy" @click="deleteTodo(todo)"></button>
+        <input type="checkbox" v-model="todo.completed" v-on:change="completeTodo">
+        <label> {{todo.name}} </label>
+        <button type="destroy" @click='this.deleteTodo({"token": getToken, "id": todo.id, "listId" : todo.todolist_id})'></button>
+        <!--<input type="hidden" value="todo.id">
+        <input type="hidden" value="todo.todolist_id">-->
       </div>
     </li>
   </ul>
 </div> 
 
-  <div v-show="siTodos">
+<div>
+      <button  @click.prevent="supprimerComplete()">Supprimer tâches finis</button>
+</div>
+
+
+
+  <!--<div v-show="siTodos">
   <span><strong> {{ reste }} </strong> tâches faites </span>
   <ul>
     <li><a href="#" :class="{selected: filter === 'all'}" @click.prevent="filter = 'all'">Toutes</a></li>
@@ -28,105 +46,48 @@
     <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">Faites</a></li>
   </ul>
   <button  @click.prevent="supprimerComplete">Supprimer tâches finis</button>
-  <!--<button v-show="complete" @click.prevent="supprimerComplete">Supprimer tâches finis</button> Fonctionne --> 
-  </div>
+  <button v-show="complete" @click.prevent="supprimerComplete">Supprimer tâches finis</button> Fonctionne
+  
+  </div> -->
 
 </template>
 
 <script>
+  import { mapActions, mapGetters } from "vuex";
 export default{
       name: 'App',
       components: {
       },
       data() {
         return {
-          listes:[
-            {
-              id: "1",
-              name: 'Une première liste',
-              todos: [
-              {
-                id: 1,
-                name: 'Acheter du lait',
-                completed: false
-              },
-              {
-                id: 2,
-                name: 'Sortir le chien',
-                completed: false
-              },
-              {
-                id: 3,
-                name: 'Jouer aux echecs',
-                completed: false
-              },
-              {
-                id: 4,
-                name: 'Faire une game CS avec Démarrage au kicker, Minitosore et Capsylon',
-                completed:false
-              }],
-              filter: 'all',
-              complete: false,
-              checkToutCompleter: false
-            },
-            {              
-              id: "2",
-              name: 'Une seconde liste',
-              todos: [
-              {
-                id: 1,
-                name: 'Mater Netflix',
-                completed: false
-              },
-              {
-                id: 2,
-                name: 'Mater Amazon Prime',
-                completed: false
-              },
-              {
-                id: 3,
-                name: 'Mater Disney +',
-                completed: false
-              },
-              {
-                id: 4,
-                name: 'Se désabonner de Salto',
-                completed:false
-              }],
-              filter: 'all',
-              complete: false,
-              checkToutCompleter: false
-            }
-          ],
-          selected:'',
-          listeVide : ''
+          checkToutCompleter:false,
+          id:'',
+          todolistID:'',
         }
       },
       methods: { 
-        deleteTodo(todo){
+        ...mapActions("todolist", ['loadTodoLists','loadTodoList','deleteTodoList','deleteTodo','completeTodo', 'createTodoList']),
+     
+       /*deleteTodo(todo){
           let nb = this.listeVide.todos.indexOf(todo)
           this.listeVide.todos.splice(nb,1)
-        },
-        supprimerComplete(){
-          this.listeVide.todos.filter(todo => todo.completed).forEach(todo => this.deleteTodo(todo));
-          this.complete=false;
-        },
+        },*/
+       /* supprimerComplete(){
+          this.getTodolist.filter(todo => todo.completed).forEach(todo => this.deleteTodo({"token": this.getToken, "id": todo.id, "listId" : todo.todolistID}));
+        },*/
         toutCompleter(){
-          this.listeVide.todos.forEach(todo => todo.completed = this.checkToutCompleter)
+          this.getTodolist.forEach(todo => todo.completed = this.checkToutCompleter)
         },
-        miseAJourTodo(todo){
+        /*miseAJourTodo(todo){
           if (todo.completed)
             this.complete = true;
           else this.complete = this.listeVide.todos.filter(todo => todo.completed)
-        },
-        getListes(e){
-          let value = e.target.value;
-          let liste = this.listes.find(l => l.id == value);
-          this.listeVide = liste
-        }
+        },*/
       },
       computed: {
-        reste(){
+        ...mapGetters("todolist",['getTodolists','getTodolist']),
+        ...mapGetters("account", ['getToken'])
+        /* reste(){
           if(this.listeVide.length==0){
             return;
           }
@@ -147,7 +108,8 @@ export default{
         },
         siTodos(){
           return true
-        }
+        }, */
+        
       }
     }
 </script>
