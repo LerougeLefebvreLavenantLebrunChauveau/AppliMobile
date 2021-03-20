@@ -6,17 +6,17 @@
     <form @submit.prevent="submit">
       <label>email <input type="email" name="email" v-model="logi.email" required/></label>
       <label>password <input type="password" name="password" v-model="logi.password" required/></label>
-      <button  @click='this.login({"email": ""+this.logi.email, "password": ""+this.logi.password})'>Login</button>
+      <button  @click='this.login({"email": ""+logi.email, "password": ""+logi.password})'>Login</button>
     </form>
 </div>
 
 <div class="Register">
   <h3> No account ? Sign up here </h3>
-    <form action="POST">
-      <label>username <input type="text" name="username" v-model="regi.username"/></label>
+     <form @submit.prevent="submit"> 
+      <label>username <input type="text" name="name" v-model="regi.name"/></label>
       <label>email <input type="email" name="email" v-model="regi.email" required/></label>
       <label>password <input type="password" name="password" v-model="regi.password" required/></label>
-      <button  @click='this.register({"name":""+this.regi.username,"email": ""+this.regi.email ,"password": ""+this.regi.password})'>Register</button>
+      <button  @click='registerT()'>Register</button>
     </form>
   </div>
 </div>
@@ -30,9 +30,7 @@
 </template>
 
 <script>
-
   import { mapActions, mapGetters } from "vuex";
-
     export default {
         name: 'Home',
         data() {
@@ -42,7 +40,7 @@
             password: "",
           },
           regi: {
-            username:"",
+            name:"",
             email: "",
             password:"",
           },
@@ -53,14 +51,14 @@
             ...mapActions("account", ['logout', 'login','register','disconnect']),
             testla(){
               console.log("a")
+            },
+            registerT() {
+              this.register({"name":""+this.regi.name,"email": ""+this.regi.email ,"password": ""+this.regi.password});
             }
         },
-
         computed: {
             ...mapGetters("account", ['getName','getToken','getEmail']),
         },
-
     }
   
 </script>
-

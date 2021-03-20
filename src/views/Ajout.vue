@@ -1,80 +1,59 @@
 <template>
 <div class="creation">
     <h1>Ajouter des tâches à une liste</h1>
-    <form action="POST">
-      <label for="selectListe"> Choisir une liste </label>
-      <select name="liste" id="liste">
-        <option value=""> -- Choisir une liste -- </option>
-        <option value="" v-for="todo in filtreTodos" v-bind:key="todo.id"> {{todo.name  }} </option>
-      </select>
-      <br>
-      <label>Nom de la tâche <input type="text" name="nomTâche" value=""/></label>
-      <br>
-      <input type="button" value="Ajouter tâche">
-    </form>
-    <hr>
-  </div>
+    <select @click.prevent='this.loadTodoLists(getToken)'>
+    <option value="">Vos Listes</option>
+    <option v-for="todolist in getTodolists" :value="todolist.id" v-bind:key="todolist.id" @click='this.loadTodoList({"token": getToken, "id": todolist.id}); 
+                                              this.saveElements(todolist.name, todolist.id)'> 
+      {{todolist.name}}
+    </option>
+  </select>
+</div>
 
- <div>
-    <ul class="todo-list">
-      <li class="todo" v-for="todo in filtreTodos" v-bind:key="todo.id">
-        <div>
-          <label> {{todo.name}} </label>
-          <button type="destroy" @click.prevent="supprimerTodo(todo)"></button>
-        </div>
-      </li>
-    </ul>
-  </div>
+<div v-show="selected">
+  <label> Nom de la tâche </label>
+  <input id="nameTask" v-model="this.nameTask" type="name" name="nameTask" placeholder="Entrez le nom de la tâche">
+  <button @click='checkForm()'> Créer </button>
+</div>
+
+<div v-show="created">
+  <h3> La tâche a été ajouté avec succés! </h3>
+</div>
+
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default{
       name: 'App',
       components: {
       },
       data() {
         return {
-          todos: [
-            {
-              id: 1,
-              name: 'tache 1',
-              completed: false
-            },
-            {
-              id: 2,
-              name: 'tache 2',
-              completed: true
-            },
-            {
-              id: 3,
-              name: 'tache 3',
-              completed: true
-            },
-            {
-              id: 4,
-              name: 'tache 4',
-              completed:false
-            }
-          ],
-          newTodo: '',
-          filter: 'all',
-          complete: true,
-          checkToutCompleter: false
+          listName:'',
+          listID:'',
+          selected:false,
+          created:false,
+          nameTask:'',
         }
       },
       methods: {
-        supprimerTodo(todo){
-          let nb = this.todos.indexOf(todo)
-          this.todos.splice(nb,1)
+          ...mapActions("todolist", ['loadTodoLists','loadTodoList','deleteTodo','createTodo']),
+          saveElements(name,id){
+          this.listName = name;
+          this.listID = id;
+          this.selected=true;
+        },
+        checkForm(){
+          if((this.nameTask && (this.nameTask = this.nameTask.trim(this.nameTask)))){
+              this.createTodo({"token": this.getToken, "name": this.nameTask, "completed": 0, "id": this.listID});
+              this.created=true;
+          }
         }
       },
       computed: {
-        filtreTodos(){
-          if (this.filter === 'todo'){
-            return this.todos.filter(todo => !todo.completed).length != 0
-          }
-          return this.todos
-        },
+          ...mapGetters("account", ['getToken']),
+          ...mapGetters("todolist",['getTodolists','getTodolist']),
       }
     }
 </script>

@@ -1,153 +1,102 @@
 <template>
 <div>
   <label>Choisir une liste</label>
-  <br />
-  <select v-model="selected" v-on:change="getListes($event)">
-    <option v-for="myList in listes" :value="myList.id" v-bind:key="myList.id"> {{myList.name}} </option>
+  <br/>
+  <select @click.prevent='this.loadTodoLists(getToken)'>
+    <option value="">Vos Listes</option>
+    <option v-for="todolist in getTodolists" :value="todolist.id" v-bind:key="todolist.id" @click='this.loadTodoList({"token": getToken, "id": todolist.id}); this.saveElements(todolist.name);'> 
+      {{todolist.name}}
+    </option>
   </select>
   <br />
-  <input type="checkbox" v-on:change="toutCompleter()" v-model="checkToutCompleter"> 
-  <span v-show="checkToutCompleter">Tout</span>
-  <span v-show="!checkToutCompleter">Aucun</span>
-  <ul class="todo-list">
-    <li class="todo" v-for="todo in listeVide.todos" v-bind:key="todo.id" :class="{completed: todo.completed}">
+  <input type="checkbox" @click='toutCompleter(); reste()' v-model="checkToutCompleter"> 
+  <span v-show="checkToutCompleter">Aucun</span>
+  <span v-show="!checkToutCompleter">Tout</span>
+  
+  <ul v-show="selected">
+    <li class="todo" v-for="todo in getTodolist" v-bind:key="todo.id" :class="{completed: todo.completed}">
       <div>
-        <input type="checkbox" v-model="todo.completed" v-on:change="miseAJourTodo(todo)">
-        <label> {{todo.name}} </label> 
-        <button type="destroy" @click="deleteTodo(todo)"></button>
+        <input type="checkbox" v-model="todo.completed" v-on:change='completion(todo.todolist_id,todo.id); reste()'>
+        <label> {{todo.name}} </label>
+        <button type="destroy" @click='this.deleteTodo({"token": getToken, "id": todo.id, "listId" : todo.todolist_id})'></button>
       </div>
     </li>
   </ul>
 </div> 
 
-  <div v-show="siTodos">
-  <span><strong> {{ reste }} </strong> tâches faites </span>
-  <ul>
+ <div v-show="selected"> 
+   <div>
+   <span><strong> {{ this.remaining }} </strong> tâches à faire </span> 
+ <!-- <ul>
     <li><a href="#" :class="{selected: filter === 'all'}" @click.prevent="filter = 'all'">Toutes</a></li>
     <li><a href="#" :class="{selected: filter === 'todo'}" @click.prevent="filter = 'todo'" >A faire</a></li>
     <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">Faites</a></li>
-  </ul>
-  <button  @click.prevent="supprimerComplete">Supprimer tâches finis</button>
-  <!--<button v-show="complete" @click.prevent="supprimerComplete">Supprimer tâches finis</button> Fonctionne --> 
+  </ul>-->  
+  <button  @click.prevent="supprimerComplete()">Supprimer tâches finis</button>
+   </div>
   </div>
 
 </template>
 
 <script>
+  import { mapActions, mapGetters } from "vuex";
 export default{
       name: 'App',
       components: {
       },
       data() {
         return {
-          listes:[
-            {
-              id: "1",
-              name: 'Une première liste',
-              todos: [
-              {
-                id: 1,
-                name: 'Acheter du lait',
-                completed: false
-              },
-              {
-                id: 2,
-                name: 'Sortir le chien',
-                completed: false
-              },
-              {
-                id: 3,
-                name: 'Jouer aux echecs',
-                completed: false
-              },
-              {
-                id: 4,
-                name: 'Faire une game CS avec Démarrage au kicker, Minitosore et Capsylon',
-                completed:false
-              }],
-              filter: 'all',
-              complete: false,
-              checkToutCompleter: false
-            },
-            {              
-              id: "2",
-              name: 'Une seconde liste',
-              todos: [
-              {
-                id: 1,
-                name: 'Mater Netflix',
-                completed: false
-              },
-              {
-                id: 2,
-                name: 'Mater Amazon Prime',
-                completed: false
-              },
-              {
-                id: 3,
-                name: 'Mater Disney +',
-                completed: false
-              },
-              {
-                id: 4,
-                name: 'Se désabonner de Salto',
-                completed:false
-              }],
-              filter: 'all',
-              complete: false,
-              checkToutCompleter: false
-            }
-          ],
-          selected:'',
-          listeVide : ''
+          checkToutCompleter:false,
+          todolistName:'',
+          todos:[],
+          selected:false,
+          remaining:'',
+          binaryComplete:0,
         }
       },
       methods: { 
-        deleteTodo(todo){
-          let nb = this.listeVide.todos.indexOf(todo)
-          this.listeVide.todos.splice(nb,1)
-        },
+        ...mapActions("todolist", ['loadTodoLists','loadTodoList','deleteTodoList','deleteTodo','completeTodo', 'createTodoList']),
         supprimerComplete(){
-          this.listeVide.todos.filter(todo => todo.completed).forEach(todo => this.deleteTodo(todo));
-          this.complete=false;
+          this.getTodolist.filter(todo => todo.completed).forEach(todo => this.deleteTodo({"token": this.getToken, "id": todo.id, "listId" : todo.todolist_id}));
         },
         toutCompleter(){
-          this.listeVide.todos.forEach(todo => todo.completed = this.checkToutCompleter)
+          if(this.binaryComplete == 0){
+            this.getTodolist.filter(todo => todo.id).forEach(todo => this.completeTodo({"token": this.getToken, "id": todo.id, "listId": todo.todolist_id, "name": this.todolistName, "completed": this.binaryComplete}));
+            this.binaryComplete = 1
+          } else if(this.binaryComplete == 1){
+            this.getTodolist.filter(todo => todo.id).forEach(todo => this.completeTodo({"token": this.getToken, "id": todo.id, "listId": todo.todolist_id, "name": this.todolistName, "completed": this.binaryComplete}));
+            this.binaryComplete = 0
+          }
         },
-        miseAJourTodo(todo){
-          if (todo.completed)
-            this.complete = true;
-          else this.complete = this.listeVide.todos.filter(todo => todo.completed)
+        completion(id,idTodo){
+          if(this.binaryComplete == 0){
+            this.completeTodo({"token": this.getToken, "id": idTodo, "listId": id, "name": this.todolistName, "completed": this.binaryComplete});
+            this.binaryComplete = 1
+          } else if(this.binaryComplete == 1){
+            this.completeTodo({"token": this.getToken, "id": idTodo, "listId": id, "name": this.todolistName, "completed": this.binaryComplete});
+            this.binaryComplete = 0;
+          }
+          
         },
-        getListes(e){
-          let value = e.target.value;
-          let liste = this.listes.find(l => l.id == value);
-          this.listeVide = liste
-        }
+        saveElements(name){
+          this.todolistName = name;
+          this.selected=true;
+        },
+        reste(){
+          if(this.getTodolist.length==0){
+            this.remaining;
+          }
+          else{
+            this.remaining = this.getTodolist.filter(todo => todo.completed).length
+          }
+        },
       },
       computed: {
-        reste(){
-          if(this.listeVide.length==0){
-            return;
-          }
-          else{
-            return this.listeVide.todos.filter(todo => todo.completed).length
-          }
+        ...mapGetters("todolist",['getTodolists','getTodolist']),
+        ...mapGetters("account", ['getToken']),
+        getTodoArray(){
+          return this.todos;
         },
-        filter(){
-          if(this.listeVide.filter === 'todo'){
-            return this.listeVide.todos.filter(todo => !todo.completed).length != 0;
-          }
-          else if(this.listeVide.filter === 'done'){
-            return this.listeVide.todos.filter(todo => todo.completed);
-          }
-          else{
-            return this.listeVide.todos
-          }
-        },
-        siTodos(){
-          return true
-        }
       }
     }
 </script>
