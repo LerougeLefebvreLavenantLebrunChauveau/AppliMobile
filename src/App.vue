@@ -1,10 +1,10 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">Account</router-link> | 
+    <router-link to="/account">Account</router-link> | 
     <router-link to="/lists">Lists</router-link> |
-    <router-link to="/creation">Créer une liste</router-link> |
-    <router-link to="/ajout">Ajout</router-link>
+    <router-link to="/creation_deletion_lists">Créer/Supprimer listes</router-link> |
+    <router-link to="/creation_deletion_tasks">Gérér listes</router-link>
   </div>
   <router-view/>
 </template>
