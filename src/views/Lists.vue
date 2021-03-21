@@ -27,11 +27,11 @@
  <div v-show="selected"> 
    <div>
    <span><strong> {{ this.remaining }} </strong> tâches à faire </span> 
- <!-- <ul>
+  <!--<ul>
     <li><a href="#" :class="{selected: filter === 'all'}" @click.prevent="filter = 'all'">Toutes</a></li>
     <li><a href="#" :class="{selected: filter === 'todo'}" @click.prevent="filter = 'todo'" >A faire</a></li>
     <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">Faites</a></li>
-  </ul>-->  
+  </ul>-->
   <button  @click.prevent="supprimerComplete()">Supprimer tâches finis</button>
    </div>
   </div>
@@ -52,6 +52,7 @@ export default{
           selected:false,
           remaining:'',
           binaryComplete:0,
+          filter:''
         }
       },
       methods: { 

@@ -20,6 +20,25 @@
   <h3> La tâche a été ajouté avec succés! </h3>
 </div>
 
+<div v-show="selected">
+  <h1> Modifier la tâche d'une liste </h1>
+  <select @click.prevent='this.loadTodoList({"token": getToken, "id": this.listID})'>
+    <option value="">Vos Tâches</option>
+    <option v-for="todos in getTodolist" :value="todos.id" v-bind:key="todos.id" @click='this.saveTodo(todos.id)'> 
+      {{todos.name}}
+    </option>
+  </select>
+  <input id='newName' v-model="this.newName" type="name" name="newName" placeholder="Entrez le nouveau nom de la tâche">
+  <button @click='checkForm()'> Modifier </button>
+</div>
+
+<div v-show="modified">
+  <h3> La tâche a été modifié avec succés! </h3>
+</div>
+
+
+
+
 </template>
 
 <script>
@@ -34,20 +53,29 @@ export default{
           listID:'',
           selected:false,
           created:false,
+          modified:false,
           nameTask:'',
+          newName:'',
+          todoID:''
         }
       },
       methods: {
-          ...mapActions("todolist", ['loadTodoLists','loadTodoList','deleteTodo','createTodo']),
+          ...mapActions("todolist", ['loadTodoLists','loadTodoList','deleteTodo','createTodo','modifyTodo']),
           saveElements(name,id){
           this.listName = name;
           this.listID = id;
           this.selected=true;
         },
+          saveTodo(id){
+            this.todoID = id;
+          },  
         checkForm(){
           if((this.nameTask && (this.nameTask = this.nameTask.trim(this.nameTask)))){
               this.createTodo({"token": this.getToken, "name": this.nameTask, "completed": 0, "id": this.listID});
               this.created=true;
+          } else if((this.newName && (this.newName = this.newName.trim(this.newName)))){
+              this.modifyTodo({"token": this.getToken, "id": this.todoID, "listId": this.listID, "name": this.newName, "completed": 0})
+              this.modified= true;
           }
         }
       },
