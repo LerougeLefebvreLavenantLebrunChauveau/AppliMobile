@@ -1,4 +1,5 @@
 <template>
+<div class="login-box">
 <div v-show="this.getName == null" class="connect">
 
   <div class="login">
@@ -8,7 +9,7 @@
       <label>password <input type="password" name="password" v-model="logi.password" required/></label>
       <button  @click='this.login({"email": ""+logi.email, "password": ""+logi.password})'>Login</button>
     </form>
-</div>
+  </div>
 
 <div class="Register">
   <h3> No account ? Sign up here </h3>
@@ -26,6 +27,7 @@
     <p> Your email : {{ this.getEmail }}</p>
   <button @click="this.logout()"> Log out </button>
   </div>
+</div>
 
 </template>
 
@@ -62,3 +64,41 @@
     }
   
 </script>
+
+
+<style>
+
+.login-box{
+    width: 280px;
+    margin: 0 auto;
+    color: black;
+}
+.login-box h3{
+    font-size: 30px;
+    border-bottom: 6px solid #00BFFF;
+    margin-bottom: 10px;
+    padding: 13px 0;
+}
+label{
+    width: 80%;
+    overflow: hidden;
+    font-size: 20px;
+    border-bottom: 1px solid #00BFFF;
+}
+/*button {
+    width: 100%;
+    border: 2px solid #00BFFF;
+    color: black;
+    padding: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 10px 0;
+}*/
+.Register, .login{
+    background-color: white;
+    border-radius: 10px;
+    padding: 0 10px;
+}
+
+
+</style>
