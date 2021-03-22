@@ -1,15 +1,13 @@
 <template>
-    <div class="home">
-      <h1>Bienvenue sur l'application ...</h1>
-    </div>
+<sidebar></sidebar>
 </template>
 
 <script>
+import Sidebar from '../components/sidebar.vue';
     export default {
-        name: 'Home',
-        methods: {
-        },
-        computed: {
+        name: 'App',
+        components:{
+                Sidebar
         }
     }
 </script>

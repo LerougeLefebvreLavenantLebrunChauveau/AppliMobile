@@ -42,7 +42,7 @@ export function completeTodo({ commit }, info){
 }
 
 export function modifyTodo({ commit }, info){
-  axios.patch('http://138.68.74.39/api/todo/'+info["id"]+'?name='+info["name"]+'&completed='+info["completed"]+'&todolist_id='+info["listId"], {name: "aaa",headers: {'Authorization': 'Bearer '+info["token"]}})
+  axios.patch('http://138.68.74.39/api/todo/'+info["id"]+'?name='+info["name"]+'&completed='+info["completed"]+'&todolist_id='+info["listId"], null, {headers: {'Authorization': 'Bearer '+info["token"]}})
       .then(response => {console.log(response.data);
         axios.get('http://138.68.74.39/api/todos/'+info["listId"], {headers: {'Authorization': 'Bearer '+info['token']}})
           .then(response => {commit("loadTodoList", response.data);});})
