@@ -1,7 +1,5 @@
 <template>
 
-<div>
-    <div>
         <input type="checkbox"  @click='completion(idList,idTodo,nameList)'>
         <label> {{nameTodo}} </label>
         <button type="destroy" class="deletion" @click='this.deleteTodo({"token": token, "id": idTodo, "listId" : idList})'>Supprimer tâche</button>
@@ -11,8 +9,7 @@
             <input id='newName' v-model="this.newName" type="name" name="newName" placeholder="Entrez le nouveau nom de la tâche">
             <button @click='checkFormModifTasks()'> Modifier </button>
         </div>
-    </div>
-</div>
+
 
 </template>
 
@@ -61,6 +58,10 @@
 </script>
 
 <style>
+
+    ul{
+        padding-left:40px;
+    }
 
     li.todo{
       color:red;

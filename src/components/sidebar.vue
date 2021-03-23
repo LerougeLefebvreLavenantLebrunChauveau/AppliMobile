@@ -1,12 +1,19 @@
 <template>
 <div>
   <div>
+    <div class="bloc_middle">
+        <h1> <label> Créer une liste </label> </h1>
+            <input id="newList" v-model="this.newList" type="name" name="newList" placeholder="Entrez le nom de la liste" required>
+            <button @click='checkForm()'> Créer </button>
+
+    <div>
     <select @click.prevent='this.loadTodoLists(getToken)'>
         <option value="">Vos Listes</option>
         <option v-for="todolist in getTodolists" :value="todolist.id" v-bind:key="todolist.id" v-bind:id="todolist.id" v-bind:name="todolist.name" @click='this.loadTodoList({"token": getToken, "id": todolist.id}); this.saveElements(todolist.name,todolist.id)'> 
         {{todolist.name}}
         </option>
     </select>
+    </div>
 
     <ajout-tasks :id="listID" :token="this.getToken" :nameList="listName"></ajout-tasks>
 
@@ -20,22 +27,19 @@
         <span><strong> {{ remaining }} </strong> tâches faites </span> 
         <button  @click="supprimerComplete()">Supprimer tâches finis</button>
     </div>
-
+    <div>
     <ul>
         <li><a href="#" :class="{selected: filter === 'all'}" @click.prevent="filter = 'all'">Toutes</a></li>
         <li><a href="#" :class="{selected: filter === 'todo'}" @click.prevent="filter = 'todo'">A faire</a></li>
         <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">Faites</a></li>
     </ul>
+    </div>
+
 
     <div>
         <h3> <label> Supprimer la liste courante</label> </h3>
         <button  @click='this.deleteTodoList({"token": getToken, "id": this.listID});'>Supprimer</button>
     </div>
-
-    <div>
-        <h1> <label> Créer une liste </label> </h1>
-            <input id="newList" v-model="this.newList" type="name" name="newList" placeholder="Entrez le nom de la liste" required>
-            <button @click='checkForm()'> Créer </button>
     </div>
 
   </div>
@@ -110,9 +114,12 @@ import Todos from './Todos.vue';
       font-size: 0.7em !important;
     }
     ul{
-      width: 93%;
       list-style-type: none;
     }
-
+    .bloc_middle{
+        background-color: orange;
+        margin: 0 auto;
+        border-radius: 5px;
+    }
 
 </style>
