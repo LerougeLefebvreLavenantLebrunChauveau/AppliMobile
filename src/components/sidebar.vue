@@ -3,12 +3,12 @@
   <div>
     <div class="bloc_middle">
         <h1> <label> Créer une liste </label> </h1>
-            <input id="newList" v-model="this.newList" type="name" name="newList" placeholder="Entrez le nom de la liste" required>
-            <button @click='checkForm()'> Créer </button>
+        <input id="newList" v-model="this.newList" type="name" name="newList" placeholder="Entrez le nom de la liste" required>
+        <button @click.prevent='checkForm()'> Créer </button>
 
-    <div>
-    <select @click.prevent='this.loadTodoLists(getToken)'>
-        <option value="">Vos Listes</option>
+    <div @click='this.loadTodoLists(getToken)'>
+    <select id="selectTodoList">
+        <option value="base">Vos Listes</option>
         <option v-for="todolist in getTodolists" :value="todolist.id" v-bind:key="todolist.id" v-bind:id="todolist.id" v-bind:name="todolist.name" @click='this.loadTodoList({"token": getToken, "id": todolist.id}); this.saveElements(todolist.name,todolist.id)'> 
         {{todolist.name}}
         </option>
@@ -17,9 +17,9 @@
 
     <ajout-tasks :id="listID" :token="this.getToken" :nameList="listName"></ajout-tasks>
 
-    <ul v-on:click="reste()">
-        <li v-for="todo in filteredTodos" v-bind:key="todo.id" :class="{completed: todo.completed}">
-            <todos :idTodo="todo.id" :idList="todo.todolist_id" :nameTodo="todo.name" :completed="todo.completed" :nameList="listName" :token="this.getToken"></todos>
+    <ul>
+        <li v-for="todo in filteredTodos" v-bind:key="todo.id" :class="{completed: todo.completed}" v-on:click="reste()">
+            <todos v-show="this.getTodolist.length > 0" :idTodo="todo.id" :idList="todo.todolist_id" :nameTodo="todo.name" :completed="todo.completed" :nameList="listName" :token="this.getToken" ></todos>
         </li>
     </ul>
 
@@ -38,7 +38,7 @@
 
     <div>
         <h3> <label> Supprimer la liste courante</label> </h3>
-        <button  @click='this.deleteTodoList({"token": getToken, "id": this.listID});'>Supprimer</button>
+        <button  @click='deletodolist()'>Supprimer</button>
     </div>
     </div>
 
@@ -71,7 +71,12 @@ import Todos from './Todos.vue';
             checkForm(){
                 if((this.newList && (this.newList = this.newList.trim(this.newList)))){
                     this.createTodoList({"token": this.getToken, "name": this.newList});
+                    document.getElementById("selectTodoList").value = "base";
                 }
+            },
+            deletodolist(){
+                this.deleteTodoList({"token": this.getToken, "id": this.listID});
+                document.getElementById("selectTodoList").value = "base";
             },
             saveElements(name, id){
                 this.listName = name;
@@ -83,7 +88,7 @@ import Todos from './Todos.vue';
             },
             reste(){
                 this.remaining = this.getTodolist.filter(todo => todo.completed == 1).length;
-            }
+            },
         },
         computed: {
             ...mapGetters("todolist",['getTodolists','getTodolist']),
@@ -98,6 +103,8 @@ import Todos from './Todos.vue';
                 }
             }
         }
+        
+
     }
 </script>
 

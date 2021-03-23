@@ -35,6 +35,7 @@
             id:{type:Number, default:0},
             token:{type:String, default:''},
             nameList:{type:String, default:''}
+            
         },
         methods: { 
             ...mapActions("todolist", ['createTodo', 'completeTodo']),
