@@ -85,15 +85,6 @@ label{
     font-size: 20px;
     border-bottom: 1px solid #00BFFF;
 }
-/*button {
-    width: 100%;
-    border: 2px solid #00BFFF;
-    color: black;
-    padding: 5px;
-    font-size: 18px;
-    cursor: pointer;
-    margin: 10px 0;
-}*/
 .Register, .login{
     background-color: white;
     border-radius: 10px;
