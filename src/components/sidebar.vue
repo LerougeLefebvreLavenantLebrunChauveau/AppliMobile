@@ -10,27 +10,33 @@
 
     <ajout-tasks :id="listID" :token="this.getToken" :nameList="listName"></ajout-tasks>
 
-    <ul>
-        <li v-for="todo in getTodolist" v-bind:key="todo.id" :class="{completed: todo.completed}">
+    <ul v-on:click="reste()">
+        <li v-for="todo in filteredTodos" v-bind:key="todo.id" :class="{completed: todo.completed}">
             <todos :idTodo="todo.id" :idList="todo.todolist_id" :nameTodo="todo.name" :completed="todo.completed" :nameList="listName" :token="this.getToken"></todos>
         </li>
     </ul>
 
     <div>
-        <span><strong> {{ this.remaining }} </strong> tâches à faire </span> 
-        <button  @click.prevent="supprimerComplete()">Supprimer tâches finis</button>
+        <span><strong> {{ remaining }} </strong> tâches faites </span> 
+        <button  @click="supprimerComplete()">Supprimer tâches finis</button>
     </div>
 
-<div>
-    <h3> <label> Supprimer la liste courante</label> </h3>
-    <button  @click='this.deleteTodoList({"token": getToken, "id": this.listID});'>Supprimer</button>
-  </div>
+    <ul>
+        <li><a href="#" :class="{selected: filter === 'all'}" @click.prevent="filter = 'all'">Toutes</a></li>
+        <li><a href="#" :class="{selected: filter === 'todo'}" @click.prevent="filter = 'todo'">A faire</a></li>
+        <li><a href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">Faites</a></li>
+    </ul>
 
-  <div>
-    <h1> <label> Créer une liste </label> </h1>
-        <input id="newList" v-model="this.newList" type="name" name="newList" placeholder="Entrez le nom de la liste" required>
-        <button @click='checkForm()'> Créer </button>
-  </div>
+    <div>
+        <h3> <label> Supprimer la liste courante</label> </h3>
+        <button  @click='this.deleteTodoList({"token": getToken, "id": this.listID});'>Supprimer</button>
+    </div>
+
+    <div>
+        <h1> <label> Créer une liste </label> </h1>
+            <input id="newList" v-model="this.newList" type="name" name="newList" placeholder="Entrez le nom de la liste" required>
+            <button @click='checkForm()'> Créer </button>
+    </div>
 
   </div>
 </div>
@@ -52,7 +58,8 @@ import Todos from './Todos.vue';
                 listName:'',
                 listID:0,
                 newList:'',
-                remaining:'',
+                remaining:0,
+                filter:'all',
             }
         },
         methods: { 
@@ -65,22 +72,27 @@ import Todos from './Todos.vue';
             saveElements(name, id){
                 this.listName = name;
                 this.listID = id;
+                this.remaining = this.getTodolist.filter(todo => todo.completed == 1).length;
             },
             supprimerComplete(){
                 this.getTodolist.filter(todo => todo.completed).forEach(todo => this.deleteTodo({"token": this.getToken, "id": todo.id, "listId" : todo.todolist_id}));
             },
             reste(){
-                if(this.getTodolist.length==0){
-                    this.remaining;
-                }
-                else{
-                    this.remaining = this.getTodolist.filter(todo => todo.completed).length
-                }
+                this.remaining = this.getTodolist.filter(todo => todo.completed == 1).length;
             }
         },
         computed: {
             ...mapGetters("todolist",['getTodolists','getTodolist']),
             ...mapGetters("account", ['getToken']),
+            filteredTodos(){
+                if(this.filter==='todo'){
+                    return this.getTodolist.filter(todo => !todo.completed)
+                }else if(this.filter==='done'){
+                    return this.getTodolist.filter(todo => todo.completed)
+                }else{
+                    return this.getTodolist
+                }
+            }
         }
     }
 </script>

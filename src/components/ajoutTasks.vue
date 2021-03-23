@@ -8,7 +8,7 @@
     </div>
 
     <div>
-        <input type="checkbox" @click='toutCompleter(); reste()' v-model="checkToutCompleter"> 
+        <input type="checkbox" @click='toutCompleter()' v-model="checkToutCompleter"> 
         <span v-show="!checkToutCompleter">Tout</span>
         <span v-show="checkToutCompleter">Aucun</span>
     </div>
@@ -27,8 +27,8 @@
             return {
                 created:'false',
                 nameTask:'',
-                binaryComplete:0,
-                checkToutCompleter:false
+                checkToutCompleter:false,
+                binaryComplete:0
             }
         },
         props:{

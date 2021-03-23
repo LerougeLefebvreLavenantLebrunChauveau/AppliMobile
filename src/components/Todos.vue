@@ -1,10 +1,9 @@
 <template>
 
-
 <div>
     <div>
-        <input type="checkbox"  v-on:change='completion(idList,idTodo,nameList)'>
-        <label> {{nameTodo}}  </label>
+        <input type="checkbox"  @click='completion(idList,idTodo,nameList)'>
+        <label> {{nameTodo}} </label>
         <button type="destroy" class="deletion" @click='this.deleteTodo({"token": token, "id": idTodo, "listId" : idList})'>Supprimer tâche</button>
         <button @click="this.modified=true">Modifier la tâche</button>
 
@@ -29,6 +28,7 @@
                 modified:false,
                 newName:'',
                 binaryComplete:0,
+                checked:false,
             }
         },
         props:{
@@ -56,7 +56,7 @@
                     this.binaryComplete = 0;
                 }
             },
-        },
+        }
     }
 </script>
 
