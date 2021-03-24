@@ -40,8 +40,8 @@
         <h3> <label> Supprimer la liste courante</label> </h3>
         <button  @click='deletodolist()'>Supprimer</button>
     </div>
+    
     </div>
-
   </div>
 </div>
 

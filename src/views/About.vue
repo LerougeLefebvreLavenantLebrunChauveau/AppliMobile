@@ -51,9 +51,6 @@
         },
         methods: {
             ...mapActions("account", ['logout', 'login','register','disconnect']),
-            testla(){
-              console.log("a")
-            },
             registerT() {
               this.register({"name":""+this.regi.name,"email": ""+this.regi.email ,"password": ""+this.regi.password});
             }
